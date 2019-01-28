@@ -41,14 +41,14 @@ unsigned int Tally::GetTicks() //Read out number of ticks since last reset
 {
 	unsigned int Data = 0; //Number of pulses since last read
 	digitalWrite(ClockPin, !ClockLow);  //Pulse clock pin high for >5ms to load new data
-	delay(7); 
+	delay(5.5); 
   	digitalWrite(ClockPin, ClockLow); 
 
 	for(int i = 0; i < 16; i++) {  //Clock out all 16 bits
     digitalWrite(ClockPin, !ClockLow); //Send rising edge
 		delayMicroseconds(OnTime); //Wait to stabilize
 		Data = (Data << 1) | digitalRead(DataPin);
-    digitalWrite(ClockPin, ClockLow); //Send falling edge
+    	digitalWrite(ClockPin, ClockLow); //Send falling edge
 		delayMicroseconds(OffTime);
 	}
 
@@ -58,7 +58,7 @@ unsigned int Tally::GetTicks() //Read out number of ticks since last reset
 void Tally::ClearTicks() //Reset tally, clear counter 
 {
 	digitalWrite(ClockPin, !ClockLow); //Send 20ms clock pulse
-	delay(20);
+	delay(9);
 	digitalWrite(ClockPin, ClockLow); 
 }
 
