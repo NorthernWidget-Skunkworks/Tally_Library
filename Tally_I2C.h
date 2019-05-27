@@ -29,6 +29,7 @@ Distributed as-is; no warranty is given.
 #define PEEK 0x09 //Config value to peek at values
 #define RESET 0x04 //Resets hardware registers on device
 #define CLEAR 0x02 //Clears I2C data registers on device
+#define GET_VOLTAGE 0x20 //Reads float voltage of cap
 
 #define ADR_DEFAULT 0x33
 
@@ -42,6 +43,7 @@ class Tally_I2C
 		uint8_t Clear();
 		uint8_t Reset();
 		uint16_t Peek();
+		float ReadCap();
 
 	private:
 		uint8_t ADR = 0x33; //Default address

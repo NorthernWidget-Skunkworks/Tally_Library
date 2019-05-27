@@ -74,6 +74,15 @@ uint16_t Tally_I2C::Peek()  //Get values without reset
   }
 }
 
+float Tally_I2C::ReadCap() //Get capacitor float voltage
+{
+  float Voltage = 0; //Used to store voltage read in
+  WriteByte(ADR, CONFIG, GET_VOLTAGE);
+  delay(1); //Wait for updated values
+  Voltage = ReadWord(ADR, 0x03)*(3.3/1024.0);
+  return Voltage;
+}
+
 uint8_t Tally_I2C::WriteByte(uint8_t Adr, uint8_t Pos, uint8_t Val)
 {
   Wire.beginTransmission(Adr);
