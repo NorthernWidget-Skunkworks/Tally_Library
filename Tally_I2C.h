@@ -39,15 +39,16 @@ class Tally_I2C
 		Tally_I2C(uint8_t ADR_ = 0x33); //Use default address
 		uint8_t begin(uint8_t ADR_ = 0x33, bool Rst = false); //Use default address, do not reset by default 
 		String GetString();
-		String GetHeader();
+		String GetHeader(bool Debug_ = false);  //No debug output by default
 		uint8_t Clear();
 		uint8_t Reset();
 		uint16_t Peek();
-		float ReadCap();
+		float ReadCap(bool Update = true);  //Update value by default 
 
 	private:
 		uint8_t ADR = 0x33; //Default address
 		const unsigned long GlobalTimeout = 25; //Wait at most 25ms for new data 
+		bool Debug = false; //Debug flag for printouts
 		uint8_t WriteByte(uint8_t Adr, uint8_t Pos, uint8_t Val);
 		uint8_t ReadByte(uint8_t Adr, uint8_t Pos);
 		unsigned int ReadWord(uint8_t Adr, uint8_t Pos);

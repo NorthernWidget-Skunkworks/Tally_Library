@@ -42,14 +42,16 @@ String Tally_I2C::GetString()
     if(ReadByte(ADR, 0x00) == 0) Done = true; //Proceed once sample is complete
   }
 
-  if(Done) Data = String(ReadWord(ADR, DATA)) + ",";  //If data is ready, read data in
+  if(Done && !Debug) Data = String(ReadWord(ADR, DATA)) + ",";  //If data is ready, read data in
+  else if(Done && Debug) Data = String(ReadWord(ADR, DATA)) + "," + String(ReadCap()) + ",";  //If data is ready and debugging is enabled, print cap val as well
   else Data = "-9999";  //If system times out, return failure
   
 	return Data;
 }
 
-String Tally_I2C::GetHeader()
+String Tally_I2C::GetHeader(bool Debug_)
 {
+  Debug = Debug_; //Copy to global 
 	return "NumTicks [Cnt], ";
 }
 
@@ -74,11 +76,13 @@ uint16_t Tally_I2C::Peek()  //Get values without reset
   }
 }
 
-float Tally_I2C::ReadCap() //Get capacitor float voltage
+float Tally_I2C::ReadCap(bool Update) //Get capacitor float voltage, get name value if update == true, otherwise read stale value from last power cycle of Tally
 {
   float Voltage = 0; //Used to store voltage read in
-  WriteByte(ADR, CONFIG, GET_VOLTAGE);
-  delay(1); //Wait for updated values
+  if(Update) { //Only call for new conversion if Update is set
+    WriteByte(ADR, CONFIG, GET_VOLTAGE);
+    delay(1); //Wait for updated values
+  }
   Voltage = ReadWord(ADR, 0x03)*(3.3/1024.0);
   return Voltage;
 }
