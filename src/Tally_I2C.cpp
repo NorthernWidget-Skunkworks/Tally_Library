@@ -74,6 +74,7 @@ uint16_t Tally_I2C::Peek()  //Get values without reset
   while(!Done && (millis() - Timeout) < GlobalTimeout) {
     if(ReadByte(ADR, 0x00) == 0) Done = true; //Proceed once sample is complete
   }
+  return ReadWord(ADR, DATA); //FIX! Add failue? 
 }
 
 float Tally_I2C::ReadCap(bool Update) //Get capacitor float voltage, get name value if update == true, otherwise read stale value from last power cycle of Tally
