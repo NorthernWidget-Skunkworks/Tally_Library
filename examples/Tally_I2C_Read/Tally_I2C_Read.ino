@@ -20,10 +20,15 @@ Tally_I2C Counter;  //Instantiate counter device
 unsigned long Period = 5000; //Wait 5 seconds between samples
 
 void setup() {
+	uint8_t Stat = false; //Used to test for connectivity to device 
 	Serial.begin(9600); //Initialize serial communication 
 	Serial.println("Welcome to the Counting Machine...");  //Obligatory welcome
-	Counter.begin(); //Initialize counter
-	Counter.Reset(); //Reset device count on startup to ensure first reading is valid
+  	Serial.print("Period = "); Serial.print(Period); Serial.println(" ms"); //Display preset period
+  	Serial.print("Status = ");  //Prints status of device, if device is detected, prints PASS, otherwise prints ERROR
+  	Stat = Counter.begin();
+  	if(Stat == 0) Serial.println("PASS");
+  	else Serial.println("ERROR");
+	Counter.Clear(); //Clear device count on startup to ensure first reading is valid
 }
 
 void loop() {
@@ -32,13 +37,12 @@ void loop() {
 
 	while((millis() - Time) < Period); //Wait for rollover
 	Data = Counter.Peek(); //Read data from counter without clearing
-	Counter.Reset(); //Reset count value
+	Counter.Clear(); //Clear count value
 	Time = millis(); //Capture time
-
 	Serial.print("Count = "); 
 	Serial.print(Data);		//Print number of events in period
-	Serial.println(" Events");
-	Serial.print("Freq = ");
+	Serial.print(" Events");
+	Serial.print("\tFreq = ");
 	Serial.print(float(Data/(Period/1000.0)));  //Print average event frequency in Hz
 	Serial.println(" Hz");
 }

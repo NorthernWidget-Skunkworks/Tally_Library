@@ -28,6 +28,9 @@ uint8_t Tally_I2C::begin(uint8_t ADR_, bool Rst)
   if(ADR == ADR_DEFAULT) ADR = ADR_; //Only modify address if not already changed
   if(Rst) Reset(); //Call reset if flag is set
 	Wire.begin();
+  Wire.beginTransmission(ADR);  //Check status of device
+  Wire.write(0x00);
+  return Wire.endTransmission();
 }
 
 String Tally_I2C::GetString()
