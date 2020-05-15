@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# PlatformIO
+.pio
+.clang_complete
+.gcc-flags.json
+/platformio.ini
