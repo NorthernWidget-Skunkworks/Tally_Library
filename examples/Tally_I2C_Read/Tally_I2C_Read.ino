@@ -6,7 +6,7 @@ Bobby Schulz @ Northern Widget LLC
 6/26/2019
 https://github.com/NorthernWidget-Skunkworks/Tally_Library
 
-"On two occasions I have been asked, 'Pray, Mr. Babbage, if you put into the machine wrong figures, will the right answers come out?' 
+"On two occasions I have been asked, 'Pray, Mr. Babbage, if you put into the machine wrong figures, will the right answers come out?'
 I am not able rightly to apprehend the kind of confusion of ideas that could provoke such a question."
 -Charles Babbage
 
@@ -20,8 +20,8 @@ Tally_I2C Counter;  //Instantiate counter device
 unsigned long Period = 5000; //Wait 5 seconds between samples
 
 void setup() {
-	uint8_t Stat = false; //Used to test for connectivity to device 
-	Serial.begin(9600); //Initialize serial communication 
+	uint8_t Stat = false; //Used to test for connectivity to device
+	Serial.begin(9600); //Initialize serial communication
 	Serial.println("Welcome to the Counting Machine...");  //Obligatory welcome
 	Serial.print("Period = "); Serial.print(Period); Serial.println(" ms"); //Display preset period
 	Serial.print("Status = ");  //Prints status of device, if device is detected, prints PASS, otherwise prints ERROR
@@ -40,10 +40,20 @@ void loop() {
 	Data = Counter.Peek(); //Read data from counter without clearing
 	Counter.Clear(); //Clear count value
 	Time = millis(); //Capture time
-	Serial.print("Count = "); 
+
+	float Frequency = Data/(Period/1000.0);  // average event frequency in Hz
+	float WindSpeed = Frequency * 2.5 * 1.60934;  // in km/h, from 2.5 mph/Hz & 1.60934 kmph/mph
+	// 2.5 mph/Hz conversion factor from https://www.store.inspeed.com/Inspeed-Version-II-Reed-Switch-Anemometer-Sensor-Only-WS2R.htm
+
+	Serial.print("Count = ");
 	Serial.print(Data);		//Print number of events in period
-	Serial.print(" Events");
-	Serial.print("\tFreq = ");
-	Serial.print(float(Data/(Period/1000.0)));  //Print average event frequency in Hz
+	Serial.println(" Events");
+
+	Serial.print("Freq = ");
+	Serial.print(Frequency);  //Print average event frequency in Hz
 	Serial.println(" Hz");
+
+	Serial.print("Wind Speed = ");
+	Serial.print(WindSpeed);  //Print average wind speed in km/h
+	Serial.println(" km/h");
 }
